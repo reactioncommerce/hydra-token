@@ -1,0 +1,75 @@
+{
+  "name": "@reactioncommerce/hydra-token",
+  "version": "0.0.0-development",
+  "description": "Command line interface that makes it quick and easy to get a valid access token for a Reaction GraphQL API",
+  "main": "./src/index.js",
+  "bin": {
+    "hydra-token": "./src/cli.js"
+  },
+  "scripts": {
+    "lint": "eslint src"
+  },
+  "files": [
+    "src",
+    "LICENSE",
+    "README.md"
+  ],
+  "keywords": [],
+  "author": "Reaction Commerce <hello@reactioncommerce.com>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reactioncommerce/hydra-token.git"
+  },
+  "bugs": {
+    "url": "https://github.com/reactioncommerce/hydra-token/issues"
+  },
+  "homepage": "https://github.com/reactioncommerce/hydra-token#readme",
+  "dependencies": {
+    "commander": "^4.1.1",
+    "node-fetch": "^2.6.0",
+    "simple-oauth2": "^3.3.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^8.1.0",
+    "@commitlint/config-conventional": "^8.1.0",
+    "@reactioncommerce/eslint-config": "^2.1.1",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jest": "^23.8.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.18.3",
+    "eslint-plugin-react-hooks": "^2.4.0",
+    "husky": "^3.0.0",
+    "semantic-release": "^17.0.2"
+  },
+  "eslintConfig": {
+    "extends": "@reactioncommerce",
+    "settings": {
+      "react": {
+        "version": "16.3"
+      }
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "release": {
+    "branches": [
+      "trunk"
+    ]
+  }
+}
