@@ -1,24 +1,53 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
 version: 2
 jobs:
-  deploy:
+  build:
     docker:
-      - image: circleci/node:12.14.1
-    working_directory: ~/repo
+      - image: node:12
     steps:
       - checkout
-      - run: npm install
-      # - run: npx semantic-release
+      - run: npm ci
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+  lint:
+    docker:
+      - image: node:12
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+      - run: npm run lint
+
+  deploy:
+    docker:
+      - image: node:12
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+      - run: npx semantic-release
 
 workflows:
   version: 2
-  deploy:
+  build_deploy:
     jobs:
+      - build:
+          context: reaction-publish-semantic-release
+      - lint:
+          requires:
+            - build
       - deploy:
           context: reaction-publish-semantic-release
+          requires:
+            - lint
           filters:
             branches:
               only: trunk
