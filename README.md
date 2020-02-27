@@ -18,9 +18,13 @@ In the most common case where you're running the Reaction Hydra service on the s
 hydra-token get <userId>
 ```
 
+The `userId` is treated as an opaque value. The command does not look up in any database to confirm that this is a real user ID. If you mistype it, you'll still get an access token, but the API will reject your request because it cannot find any user with that ID.
+
+The resulting token will expire after the length of time specified by the `TTL_ACCESS_TOKEN` environment variable for the Hydra service. This is only 1 hour by default. If having to get a new token every hour is bumming you out, you can set that environment variable to something higher (assuming you're not using this in a production environment).
+
 Full help output:
 
-```sh
+```txt
 $ hydra-token get --help
 Usage: hydra-token get [options] <userId>
 
@@ -41,6 +45,18 @@ hydra-token --help
 ```sh
 hydra-token --version
 ```
+
+## How It Works
+
+The `hydra-token get` command, by having access to both the public OAuth endpoint and the normally-private Hydra admin endpoint, is able to act as both a browser and an identity provider. It creates a Hydra client and then does the entire standard OAuth flow as if it is both a user in a browser and that client. There is no browser emulation; it just makes all of the expected HTTP calls in the expected order and with the expected headers and cookies for a login flow.
+
+For the most part, this tool is specific to [Hydra](https://www.ory.sh/docs/hydra/) OAuth but is _not_ specific to Reaction Commerce. The only Reaction-specific part is that whatever string you pass as the `userId` argument becomes the `subject` of the granted token. It should be possible and easy to adapt this tool to another Hydra implementation.
+
+## Security Considerations
+
+The access token returned by the `hydra-token get` command will grant all the permissions that the user with the given ID has, and _any user ID may be entered_!
+
+Additionally, this requires access to the Hydra admin URL, which does not require authentication and should never be public on the Internet. If you are using this against a deployment for automated tests, be very careful to use an IP address whitelist, VPN, or some other method of gaining access to the admin URL without exposing that port to the whole world.
 
 ## Commit Messages
 
