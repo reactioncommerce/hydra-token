@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
-const { URL } = require("url");
 const fetch = require("node-fetch");
+const makeAbsolute = require("./makeAbsolute");
 
 const OAUTH2_CLIENT_ID = "get-token-dev-script";
 const OAUTH2_CLIENT_SECRET = "get-token-dev-script-secret";
@@ -19,11 +19,6 @@ const hydraClient = {
   token_endpoint_auth_method: "client_secret_basic"
 };
 /* eslint-enable camelcase */
-
-const makeAbsolute = (relativeUrl, baseUrl) => {
-  const url = new URL(relativeUrl, baseUrl);
-  return url.href;
-};
 
 /**
  * @summary Calls Hydra's endpoint to create an OAuth client for this application

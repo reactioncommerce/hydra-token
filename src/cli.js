@@ -17,16 +17,21 @@ program.version(packageJson.version);
 program
   .command("get <userId>")
   .description("Calls Hydra's endpoints to request an access token that can be used to request data from the GraphQL API authenticated as this user.")
-  .option("-p,--public-url <url>", "A Hydra public OAuth URL that can be accessed from this computer. Must NOT end with a `/`. Default is http://localhost:4444")
-  .option("-a,--admin-url <url>", "A Hydra private admin URL that can be accessed from this computer. Must NOT end with a `/`. Default is http://localhost:4445")
+  .option("-r,--raw", "Return the raw access token string, for piping or programmatic use")
+  .option("-p,--public-url <url>", "A Hydra public OAuth URL that can be accessed from this computer. Default is http://localhost:4444")
+  .option("-a,--admin-url <url>", "A Hydra private admin URL that can be accessed from this computer. Default is http://localhost:4445")
   .action((userId, options) => {
     getAccessToken(userId, {
       hydraAdminUrl: options.adminUrl,
       hydraOAuthUrl: options.publicUrl
     })
       .then((accessToken) => {
-        console.log(`\nAccess token for user ${userId}:\n\n${accessToken}\n`);
-        console.log(`Paste this in GraphQL Playground "HTTP HEADERS" box:\n{\n    "Authorization": "${accessToken}"\n}\n`);
+        if (options.raw) {
+          console.log(accessToken);
+        } else {
+          console.log(`\nAccess token for user ${userId}:\n\n${accessToken}\n`);
+          console.log(`Paste this in GraphQL Playground "HTTP HEADERS" box:\n{\n    "Authorization": "${accessToken}"\n}\n`);
+        }
         return null;
       })
       .catch((error) => {

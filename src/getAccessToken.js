@@ -4,6 +4,7 @@ const { URL } = require("url");
 const fetch = require("node-fetch");
 const simpleOAuth2 = require("simple-oauth2");
 const ensureHydraClient = require("./ensureHydraClient");
+const makeAbsolute = require("./makeAbsolute");
 
 const HYDRA_OAUTH_URL = "http://localhost:4444";
 const HYDRA_ADMIN_URL = "http://localhost:4445";
@@ -62,7 +63,7 @@ async function getAccessToken(userId, options) {
   const challenge = redirect1Parsed.searchParams.get("login_challenge");
   const cookie = startLoginResult.headers.get("set-cookie");
 
-  const acceptLoginResult = await fetch(`${hydraAdminUrl}/oauth2/auth/requests/login/accept?login_challenge=${challenge}`, {
+  const acceptLoginResult = await fetch(`${makeAbsolute("/oauth2/auth/requests/login/accept", hydraAdminUrl)}?login_challenge=${challenge}`, {
     method: "PUT",
     body: JSON.stringify({
       subject: userId,
@@ -91,7 +92,7 @@ async function getAccessToken(userId, options) {
   const consentChallenge = redirect3Parsed.searchParams.get("consent_challenge");
   const nextCookies = continueLoginResult.headers.raw()["set-cookie"];
 
-  const consentResult = await fetch(`${hydraAdminUrl}/oauth2/auth/requests/consent/accept?consent_challenge=${consentChallenge}`, {
+  const consentResult = await fetch(`${makeAbsolute("/oauth2/auth/requests/consent/accept", hydraAdminUrl)}?consent_challenge=${consentChallenge}`, {
     method: "PUT",
     body: JSON.stringify({
       grant_scope: ["openid"], // eslint-disable-line camelcase
