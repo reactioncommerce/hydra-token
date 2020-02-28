@@ -31,9 +31,12 @@ Usage: hydra-token get [options] <userId>
 Calls Hydra's endpoints to request an access token that can be used to request data from the GraphQL API authenticated as this user.
 
 Options:
-  -p, --public-url  A Hydra public OAuth URL that can be accessed from this computer. Must NOT end with a `/`. Default is http://localhost:4444
-  -a, --admin-url   A Hydra private admin URL that can be accessed from this computer. Must NOT end with a `/`. Default is http://localhost:4445
-  -h, --help        output usage information
+  -r,--raw               Return the raw access token string, for piping or programmatic use
+  -p,--public-url <url>  A Hydra public OAuth URL that can be accessed from this computer. Must NOT end with a `/`.
+                         Default is http://localhost:4444
+  -a,--admin-url <url>   A Hydra private admin URL that can be accessed from this computer. Must NOT end with a `/`.
+                         Default is http://localhost:4445
+  -h, --help             output usage information
 ```
 
 ### Other Commands
