@@ -34,7 +34,7 @@ async function ensureHydraClient(hydraAdminUrl) {
     headers: { "Content-Type": "application/json" }
   });
 
-  if (![200, 404].includes(getClientResponse.status)) {
+  if (![200, 404, 401].includes(getClientResponse.status)) {
     console.error(await getClientResponse.text());
     throw new Error(`Could not get Hydra client [${getClientResponse.status}]`);
   }
