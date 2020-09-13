@@ -26,9 +26,13 @@ const hydraClient = {
  *   is exposed on the internal network. Ensure that it is not exposed to the
  *   public Internet in production.
  * @param {String} hydraAdminUrl Hydra private admin URL
+ * @param {String} userId userId from command Input
  * @returns {Promise<undefined>} Nothing
  */
-async function ensureHydraClient(hydraAdminUrl) {
+async function ensureHydraClient(hydraAdminUrl, userId) {
+  let {client_id, ...rest} = hydraClient;
+  let hydraClientUpd = {'client_id':userId, ...rest};
+
   const getClientResponse = await fetch(makeAbsolute(`/clients/${OAUTH2_CLIENT_ID}`, hydraAdminUrl), {
     method: "GET",
     headers: { "Content-Type": "application/json" }
@@ -44,7 +48,7 @@ async function ensureHydraClient(hydraAdminUrl) {
     const updateClientResponse = await fetch(makeAbsolute(`clients/${OAUTH2_CLIENT_ID}`, hydraAdminUrl), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(hydraClient)
+      body: JSON.stringify(hydraClientUpd)
     });
 
     if (updateClientResponse.status !== 200) {
@@ -55,7 +59,7 @@ async function ensureHydraClient(hydraAdminUrl) {
     const response = await fetch(makeAbsolute("/clients", hydraAdminUrl), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(hydraClient)
+      body: JSON.stringify(hydraClientUpd)
     });
 
     switch (response.status) {

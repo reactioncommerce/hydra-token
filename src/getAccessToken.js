@@ -29,12 +29,12 @@ async function getAccessToken(userId, options) {
     hydraOAuthUrl = HYDRA_OAUTH_URL
   } = options || {};
 
-  await ensureHydraClient(hydraAdminUrl);
+  await ensureHydraClient(hydraAdminUrl, userId);
 
   // Initialize the OAuth2 Library
   const oauth2 = simpleOAuth2.create({
     client: {
-      id: OAUTH2_CLIENT_ID,
+      id: userId,
       secret: OAUTH2_CLIENT_SECRET
     },
     auth: {
